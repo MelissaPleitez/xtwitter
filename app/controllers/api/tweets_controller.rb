@@ -10,8 +10,8 @@ class Api::TweetsController < ApiController
 
 
     def show
-        # @tweets = Tweet.find(params[:id])
-        # render 'show', formats: :json
+        @tweets = Tweet.find(params[:id])
+        render 'show', formats: :json
     end
 
 
