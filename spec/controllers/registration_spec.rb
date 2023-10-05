@@ -36,6 +36,7 @@ RSpec.describe Api::RegistrationController, type: :controller do
         {
           user: {
             name: 'John Doe',
+            username: 'JohnD',
             email: 'invalid-email', 
             password: 'short'   
           }
@@ -50,6 +51,7 @@ RSpec.describe Api::RegistrationController, type: :controller do
 
       it 'returns a 422 status code' do
         post :create, params: invalid_params
+        puts response
         expect(response).to have_http_status(:unprocessable_entity)
       end
 

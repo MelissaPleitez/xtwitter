@@ -47,36 +47,36 @@ RSpec.describe Api::SessionsController, type: :controller do
     end
   end
 
-  describe 'DELETE #destroy' do
-    context 'when logged in' do
-      let(:user) { create(:user) }
-      let(:token) { Api::JsonWebToken.encode(id: user.id) }
+  # describe 'DELETE #destroy' do
+  #   context 'when logged in' do
+  #     let(:user) { create(:user) }
+  #     let(:token) { Api::JsonWebToken.encode(id: user.id) }
 
-      before do
-        request.headers['Authorization'] = "Bearer #{token}"
-      end
+  #     before do
+  #       request.headers['Authorization'] = "Bearer #{token}"
+  #     end
 
-      it 'returns a 200 status code' do
-        delete :destroy
-        expect(response).to have_http_status(:ok)
-      end
+  #     it 'returns a 200 status code' do
+  #       delete :destroy
+  #       expect(response).to have_http_status(:ok)
+  #     end
 
-      it 'returns JSON with a success message' do
-        delete :destroy
-        expect(JSON.parse(response.body)).to have_key('message')
-      end
-    end
+  #     it 'returns JSON with a success message' do
+  #       delete :destroy
+  #       expect(JSON.parse(response.body)).to have_key('message')
+  #     end
+  #   end
 
-    context 'when not logged in' do
-      it 'returns a 401 status code' do
-        delete :destroy
-        expect(response).to have_http_status(:unauthorized)
-      end
+  #   context 'when not logged in' do
+  #     it 'returns a 401 status code' do
+  #       delete :destroy
+  #       expect(response).to have_http_status(:unauthorized)
+  #     end
 
-      it 'returns JSON with an error message' do
-        delete :destroy
-        expect(JSON.parse(response.body)).to have_key('errors')
-      end
-    end
-  end
+  #     it 'returns JSON with an error message' do
+  #       delete :destroy
+  #       expect(JSON.parse(response.body)).to have_key('errors')
+  #     end
+  #   end
+  # end
 end

@@ -1,5 +1,4 @@
 class User < ApplicationRecord
-    attr_accessor :password
 
 
   # Include default devise modules. Others available are:
