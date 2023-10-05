@@ -1,0 +1,1 @@
+json.partial! "api/tweets/like", tweet: @tweet

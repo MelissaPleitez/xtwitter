@@ -1,28 +1,36 @@
 {
-    "type": "object",
-    "required": ["user"],
-    "properties": {
-      "user" : {
-        "type" : "object",
-        "required" : [
-          "id",
-          "name",
-          "username",
-          "email",
-          "password",
-          "created_at",
-          "updated_at"
-        ],
-        "properties" : {
-          "id" : { "type" : "integer" },
-          "name" : { "type" : "string" },
-          "username" : { "type" : "string" },
-          "email" : { "type" : "string" },
-          "password" : { "type" : "string" },
-          "created_at" : { "type" : "string", "format": "date-time" },
-          "updated_at" : { "type" : "string", "format": "date-time" }
-        }
-      }
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": ["array", "object"],
+  "properties": {
+    "id": {
+      "type": "integer"
+    },
+    "name": {
+      "type": "string"
+    },
+    "username": {
+      "type": "string"
+    },
+    "email": {
+      "type": "string"
+    },
+    "password": {
+      "type": "string"
+    },
+    "created_at": {
+      "type": "string"
+    },
+    "updated_at": {
+      "type": "string"
     }
-  }
-  
+  },
+  "required": [
+    "id",
+    "name",
+    "username",
+    "email",
+    "password",
+    "created_at",
+    "updated_at"
+  ]
+}
