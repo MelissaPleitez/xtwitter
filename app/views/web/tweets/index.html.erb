@@ -6,7 +6,7 @@
   <% @tweets.each do |tweet| %>
     <%= render tweet %>
     <p>
-      <%# <%= link_to "Show this tweet", tweet %> %>
+      <%= link_to "Show this tweet", web_tweet_path(tweet) %>
     </p>
   <% end %>
 </div>

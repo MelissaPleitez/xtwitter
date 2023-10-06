@@ -1,20 +1,16 @@
 Rails.application.routes.draw do
   get 'user/index'
-  # devise_for :users
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
-  # Defines the root path route ("/")
   # root "users#index"
- devise_for :users
+ devise_for :users, controllers: {
+  sessions: 'users/sessions',       # Controlador personalizado para sesiones
+  registrations: 'users/registrations' # Controlador personalizado para registros
+}
   namespace :api do
-    resources :authentication do
-      member do
-       post 'log_in', to: 'auth#create'
-      end 
-    end  
+
     resources :registration do
       member do
-       post 'create', to: 'registration#create'
+       post 'sing_in', to: 'registration#create'
       end 
     end 
     resources :sessions do

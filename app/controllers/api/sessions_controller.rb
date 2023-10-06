@@ -1,5 +1,4 @@
 class Api::SessionsController < ApiController
-  include TokenCreation
   skip_before_action :authenticate_user!
   before_action :set_default_format
 
