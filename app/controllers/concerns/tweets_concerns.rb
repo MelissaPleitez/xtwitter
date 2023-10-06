@@ -30,7 +30,7 @@ module TweetsConcerns extend ActiveSupport::Concern
           retweet_id: tweet,    
         )
         
-        if retweet.save 
+        if retweet.save! 
             return retweet
         else
             return false

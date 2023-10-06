@@ -1,10 +1,17 @@
 <p style="color: green"><%= notice %></p>
+<% if !user_signed_in? %>
+  <%= link_to "Login", new_user_session_path, class: "btn btn-primary" %>
+<% else %>
+  <%= button_to "Logout", destroy_user_session_path, method: :delete, class: "btn btn-primary" %>
+<% end %>
 
 <h1>Tweets</h1>
 
 <div id="tweets">
   <% @tweets.each do |tweet| %>
-    <%= render tweet %>
+    <p> <%= tweet.body %></p>
+    <p> User: @<%= tweet.user.username %></p>
+    <p><%= tweet.created_at.strftime("%d %b %y")%></p>
     <p>
       <%= link_to "Show this tweet", web_tweet_path(tweet) %>
     </p>

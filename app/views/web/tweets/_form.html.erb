@@ -1,11 +1,11 @@
-
-<%= form_with(model: tweet) do |form| %>
-  <% if tweet.errors.any? %>
+<h1><%= current_user.username%></h1>
+<%= form_for(@tweet, url: web_tweets_path) do |form| %>
+  <% if @tweet.errors.any? %>
     <div style="color: red">
-      <h2><%= pluralize(tweet.errors.count, "error") %> prohibited this tweet from being saved:</h2>
+      <h2><%= pluralize(@tweet.errors.count, "error") %> prohibited this tweet from being saved:</h2>
 
       <ul>
-        <% tweet.errors.each do |error| %>
+        <% @tweet.errors.each do |error| %>
           <li><%= error.full_message %></li>
         <% end %>
       </ul>
@@ -13,30 +13,9 @@
   <% end %>
 
   <div>
-    <%= form.label :body, style: "display: block" %>
-    <%= form.text_field :body %>
+    <%= form.text_area :body, style: "display: block" %>
+    <%= form.hidden_field :user_id, style: "display: block" %>
   </div>
-
-  <div>
-    <%= form.label :user_id, style: "display: block" %>
-    <%= form.text_field :user_id %>
-  </div>
-
-  <div>
-    <%= form.label :retweet_id, style: "display: block" %>
-    <%= form.text_field :retweet_id %>
-  </div>
-
-  <div>
-    <%= form.label :quotes_id, style: "display: block" %>
-    <%= form.text_field :quotes_id %>
-  </div>
-
-  <div>
-    <%= form.label :parent_tweet_id, style: "display: block" %>
-    <%= form.text_field :parent_tweet_id %>
-  </div>
-
   <div>
     <%= form.submit %>
   </div>

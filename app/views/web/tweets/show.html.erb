@@ -1,11 +1,13 @@
 <p style="color: green"><%= notice %></p>
 
- <%= render @tweet %> 
-
+ <p> <%= @tweet.body %></p>
+  <p> User: <%= @tweet.user.name %></p>
+  <p>@<%= @tweet.user.username %></p>
+  <p><%= @tweet.created_at.strftime("%d %b %y")%></p>
 <div>
   <%= link_to "Edit this tweet", edit_web_tweet_path(@tweet) %> |
   <%= link_to "Back to tweets", web_tweets_path %>
+  <%= button_to "retweet", retweet_web_tweet_path(@tweet), method: :post, class: "btn btn-primary", remote: true %>
 
-  <%# <%= button_to "Destroy this tweet", @tweet, method: :delete %> %>
 </div>
  
