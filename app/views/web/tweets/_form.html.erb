@@ -1,5 +1,5 @@
 <h1><%= current_user.username%></h1>
-<%= form_for(@tweet, url: web_tweets_path) do |form| %>
+<%= form_for(@tweet, url: new_web_tweet_path) do |form| %>
   <% if @tweet.errors.any? %>
     <div style="color: red">
       <h2><%= pluralize(@tweet.errors.count, "error") %> prohibited this tweet from being saved:</h2>

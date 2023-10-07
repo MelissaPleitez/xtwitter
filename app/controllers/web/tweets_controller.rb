@@ -54,19 +54,80 @@ class Web::TweetsController < ApplicationController
     def retweet
         @origin_tweet = Tweet.find(params[:id]) 
         retweet = Tweet.new(
-          body: nil,
-          user_id: current_user,
-          retweet_id: @origin_tweet,    
+            body:  @origin_tweet.body,
+            user: current_user, # Asigna el usuario actual al retweet
+            retweet_id: @origin_tweet.id # Asigna el ID del tweet original a retweet_id
         )
 
         respond_to do |format| 
             if retweet.save 
-                format.html { render :show, notice: "Tweet was successfully created." }
+                format.html { redirect_to web_tweets_path(@origin_tweet), notice: "Retweet was successfully created." }
             else 
                 format.html { render :show, status: :unprocessable_entity }
             end
         end
     end
+
+    def quote 
+        @tweet = Tweet.new
+        @original_tweet = Tweet.find(params[:id])
+        @quote_tweet = Tweet.new(
+        body: params[:quote_body], # El nuevo cuerpo del tweet citado
+        user: current_user,
+        quote_id: @original_tweet.id # Asigna el ID del tweet original a quote_id
+        )
+
+        respond_to do |format|
+            if @quote_tweet.save
+                format.html { redirect_to web_tweets_path(@original_tweet), notice: "Tweet was successfully quoted." }
+            else
+                format.html { render :show, status: :unprocessable_entity }
+            end
+        end
+    end
+
+    def like
+        @tweet = Tweet.find(params[:id])
+        @like = Like.new(user: current_user, tweet: @tweet)
+    
+        respond_to do |format|
+          if @like.save
+            format.html { redirect_to web_tweet_path(@tweet), notice: "Liked the tweet!" }
+          else
+            format.html { redirect_to web_tweet_path(@tweet), alert: "Unable to like the tweet." }
+          end
+        end
+    end
+    
+    def unlike
+        @tweet = Tweet.find(params[:id])
+        @like = Like.find_by(user: current_user, tweet: @tweet)
+    
+        respond_to do |format|
+          if @like&.destroy
+            format.html { redirect_to web_tweet_path(@tweet), notice: "Unliked the tweet." }
+          else
+            format.html { redirect_to web_tweet_path(@tweet), alert: "Unable to unlike the tweet." }
+          end
+        end
+    end
+
+    def reply
+        @tweet = Tweet.find(params[:id])
+        @reply_tweet = Tweet.new(
+          body: params[:body], # El cuerpo de la respuesta
+          user: current_user,
+          parent_tweet: @tweet # Establece el tweet original como el padre de la respuesta
+        )
+    
+        respond_to do |format|
+          if @reply_tweet.save
+            format.html { redirect_to web_tweet_path(@tweet), notice: "The reply was succesful" }
+          else
+            format.html { render :show, status: :unprocessable_entity }
+          end
+        end
+      end
     
 
     private

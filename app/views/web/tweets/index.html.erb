@@ -4,12 +4,14 @@
 <% else %>
   <%= button_to "Logout", destroy_user_session_path, method: :delete, class: "btn btn-primary" %>
 <% end %>
+<%= link_to "Profile", web_user_path(current_user.username) %>
+
 
 <h1>Tweets</h1>
 
 <div id="tweets">
   <% @tweets.each do |tweet| %>
-    <p> <%= tweet.body %></p>
+   <p> <%= tweet.body %></p>
     <p> User: @<%= tweet.user.username %></p>
     <p><%= tweet.created_at.strftime("%d %b %y")%></p>
     <p>
@@ -19,3 +21,4 @@
 </div>
 
 <%= link_to "New tweet", new_web_tweet_path %>
+

@@ -1,0 +1,30 @@
+<div class="p-6">
+  <div class="flex items-center justify-between">
+    <div class="flex-1 flex items-center space-x-6">
+      <div>
+        <h1 class="font-bold text-3xl"><%= @user.name %></h1>
+        <%= "@"+@user.username %>
+          <p> Join on <%= @user.created_at.strftime(" %B %Y") %></p>
+      </div>
+      <% unless current_user == @user %>
+<% if current_user.followees.exists?(followee_id: @user.id) %>
+    <%= button_to "Unfollow", unfollow_web_user_path(@user), method: :delete, class: "btn btn-danger" %>
+  <% else %>
+    <%= button_to "Follow", follow_web_user_path(@user), method: :post, class: "btn btn-primary" %>
+  <% end %>
+<% end %>
+      <% @tweets.each do |tweet| %>
+  <div class="tweet">
+    <p><%= tweet.body %></p>
+    <p>Created at: <%= tweet.created_at.strftime("%d %b %y") %></p>
+  </div>
+<% end %>
+    </div>
+    <div>
+    <%= link_to "Back to Feed", web_tweets_path %>
+   <%= link_to "Edit Profile", edit_web_user_path(@user.username) %>
+    </div>
+  </div>
+
+
+</div>

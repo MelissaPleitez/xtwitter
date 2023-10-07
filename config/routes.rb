@@ -52,18 +52,24 @@ Rails.application.routes.draw do
     resources :tweets do
       member do 
         post 'retweet', to: 'tweets#retweet'
+        post 'quote', to: 'tweets#quote'
+        post 'like', to: 'tweets#like'
+        delete 'unlike', to: 'tweets#unlike'
+        post 'reply',to: 'tweets#reply'
+      end
+    end
+  end
+
+  namespace :web do
+    resources :users, param: :username, only: [:show, :edit, :update]
+    resources :users do 
+      member do 
+        post 'follow',  to: 'users#follow'
+        delete 'unfollow', to: 'users#unfollow'
       end
     end
   end
  
-  # namespace :web do
-  #   resources :tweets do
-  #     member do 
-  #       post 'retweet', to: 'tweets#retweet'
-  #     end
-  #   end
-  # end
-
 end
 
 
