@@ -6,7 +6,6 @@
 <% end %>
 <%= link_to "Profile", web_user_path(current_user.username) %>
 
-
 <h1>Tweets</h1>
 
 <div id="tweets">
@@ -14,11 +13,24 @@
    <p> <%= tweet.body %></p>
     <p> User: @<%= tweet.user.username %></p>
     <p><%= tweet.created_at.strftime("%d %b %y")%></p>
+
+      <% like_count = tweet.likes.count %>
+      <% reply_count = tweet.replies.count %>
+      <% retweet_count = tweet.retweets.count %>
+
+      <div class="tweet-stats">
+        <p>Likes: <%= like_count %></p>
+        <p>Respuestas: <%= reply_count %></p>
+        <%= button_to "Retweets: #{retweet_count}", retweet_web_tweet_path(tweet), method: :post, class: "btn btn-primary" %>
+    </div>
+
     <p>
       <%= link_to "Show this tweet", web_tweet_path(tweet) %>
     </p>
   <% end %>
 </div>
+
+
 
 <%= link_to "New tweet", new_web_tweet_path %>
 

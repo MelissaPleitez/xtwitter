@@ -4,7 +4,12 @@ class Web::TweetsController < ApplicationController
     before_action :set_tweet, only: %i[ show edit update ]
     
     def index
-        @tweets = Tweet.all
+        followed_user_ids = current_user.followees.pluck(:followee_id)
+    
+        # Obtén los tweets, retweets y quotes de los usuarios seguidos, ordenados por fecha descendente
+        @tweets = Tweet.where(user_id: followed_user_ids).or(Tweet.where(retweet_id: followed_user_ids))
+        .or(Tweet.where(quote_id: followed_user_ids))
+        .order(created_at: :desc)
    
     end
 
@@ -127,6 +132,13 @@ class Web::TweetsController < ApplicationController
             format.html { render :show, status: :unprocessable_entity }
           end
         end
+      end
+
+      def stats
+        @tweet = Tweet.find(params[:id])
+        @like_count = @tweet.likes.count
+        @reply_count = @tweet.replies.count
+        @retweet_count = @tweet.retweets.count
       end
     
 

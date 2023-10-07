@@ -56,6 +56,7 @@ Rails.application.routes.draw do
         post 'like', to: 'tweets#like'
         delete 'unlike', to: 'tweets#unlike'
         post 'reply',to: 'tweets#reply'
+        get 'stats',to: 'tweets#stats'
       end
     end
   end
