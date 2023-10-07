@@ -4,13 +4,17 @@ class Web::TweetsController < ApplicationController
     before_action :set_tweet, only: %i[ show edit update ]
     
     def index
+        @user = current_user
+        @tweets = @user.tweets.includes(:replies, :retweets).order(created_at: :desc)
         followed_user_ids = current_user.followees.pluck(:followee_id)
     
         # Obtén los tweets, retweets y quotes de los usuarios seguidos, ordenados por fecha descendente
-        @tweets = Tweet.where(user_id: followed_user_ids).or(Tweet.where(retweet_id: followed_user_ids))
+        @tweets += Tweet.where(user_id: followed_user_ids).or(Tweet.where(retweet_id: followed_user_ids))
         .or(Tweet.where(quote_id: followed_user_ids))
         .order(created_at: :desc)
-   
+
+        @tweet = Tweet.new(user: current_user)
+
     end
 
     def show 
@@ -22,7 +26,6 @@ class Web::TweetsController < ApplicationController
     end
     
     def edit 
-
     end
 
     def create
@@ -40,7 +43,7 @@ class Web::TweetsController < ApplicationController
     def update 
         respond_to do |format|
             if @tweet.update(tweet_params)
-              format.html { redirect_to tweet_url(@tweet), notice: "Tweet was successfully updated." }
+              format.html { redirect_to web_tweet_url(@tweet), notice: "Tweet was successfully updated." }
             else
               format.html { render :edit, status: :unprocessable_entity }
             end

@@ -4,6 +4,8 @@ class Web::UsersController < ApplicationController
     def show
         @user = User.find_by(username: params[:username])
         @tweets = @user.tweets 
+        @followers_count = @user.followers.count
+        @following_count = @user.followees.count
     end
 
     def edit

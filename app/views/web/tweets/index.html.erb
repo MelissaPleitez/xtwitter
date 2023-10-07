@@ -1,36 +1,109 @@
-<p style="color: green"><%= notice %></p>
-<% if !user_signed_in? %>
-  <%= link_to "Login", new_user_session_path, class: "btn btn-primary" %>
-<% else %>
-  <%= button_to "Logout", destroy_user_session_path, method: :delete, class: "btn btn-primary" %>
+<%= content_for :notices do %>
+  <p class="text-success" role="alert"><%= notice %></p>
 <% end %>
-<%= link_to "Profile", web_user_path(current_user.username) %>
 
-<h1>Tweets</h1>
-
-<div id="tweets">
-  <% @tweets.each do |tweet| %>
-   <p> <%= tweet.body %></p>
-    <p> User: @<%= tweet.user.username %></p>
-    <p><%= tweet.created_at.strftime("%d %b %y")%></p>
-
-      <% like_count = tweet.likes.count %>
-      <% reply_count = tweet.replies.count %>
-      <% retweet_count = tweet.retweets.count %>
-
-      <div class="tweet-stats">
-        <p>Likes: <%= like_count %></p>
-        <p>Respuestas: <%= reply_count %></p>
-        <%= button_to "Retweets: #{retweet_count}", retweet_web_tweet_path(tweet), method: :post, class: "btn btn-primary" %>
+<%= content_for :user_profile do %>
+  <div class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container">
+      <p class="navbar-brand">
+        <i class="bi bi-person-circle"></i>
+        <i class="fa-regular fa-user"></i>
+        <%= link_to "Profile", web_user_path(current_user.username) %>
+      </p>
+      <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <% if !user_signed_in? %>
+              <%= link_to "Login", new_user_session_path, class: "btn btn-primary" %>
+            <% else %>
+              <%= button_to "Logout", destroy_user_session_path, method: :delete, class: "btn btn-primary" %>
+            <% end %>
+          </li>
+        </ul>
+      </div>
     </div>
+  </div>
+<% end %>
 
-    <p>
-      <%= link_to "Show this tweet", web_tweet_path(tweet) %>
-    </p>
-  <% end %>
+<div class="container mt-4">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <%= form_for(@tweet, url: web_tweets_path) do |form| %>
+        <% if @tweet.errors.any? %>
+          <div class="alert alert-danger">
+            <h2><%= pluralize(@tweet.errors.count, "error") %> prohibited this tweet from being saved:</h2>
+            <ul>
+              <% @tweet.errors.each do |error| %>
+                <li><%= error.full_message %></li>
+              <% end %>
+            </ul>
+          </div>
+        <% end %>
+
+        <div class="form-group">
+          <%= form.text_area :body, class: "form-control", rows: 3, placeholder: "What's happening?" %>
+        </div>
+
+        <%= form.hidden_field :user_id %>
+
+        <div class="text-center">
+          <%= form.submit "Tweet", class: "btn btn-primary mt-2" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
 </div>
 
+<hr>
 
+<div class="container mt-4">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <h1 class="text-center mb-4">Feed</h1>
 
-<%= link_to "New tweet", new_web_tweet_path %>
-
+      <!-- Itera a través de los tweets -->
+      <% @tweets.each do |tweet| %>
+        <div class="card mb-3">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-start">
+              <p class="card-subtitle mb-2 text-muted">
+                @<%= link_to tweet.user.username, web_user_path(tweet.user.username), class: "card-subtitle mb-2 text-muted" %>
+              </p>
+              <!-- Agregar texto para retweets y replies -->
+              <% if tweet.retweet_id? %>
+                <p class="mt-3 text-muted">Retweet</p>
+              <% elsif tweet.parent_tweet_id? %>
+                <p class="mt-3 text-muted">Reply</p>
+              <% end %>
+            </div>
+            <p class="card-text"><%= tweet.body %></p>
+            <p class="card-subtitle mb-2 text-muted"><%= tweet.created_at.strftime("%d %b %y") %></p>
+            <% like_count = tweet.likes.count %>
+            <% reply_count = tweet.replies.count %>
+            <% retweet_count = tweet.retweets.count %>
+            <div class="tweet-stats d-flex align-items-center">
+              <% if current_user && !@tweet.likes.exists?(user_id: current_user.id) %>
+                <%= button_to like_web_tweet_path(tweet), method: :post, class: "btn btn-light" do %>
+                  <i class="fa-regular fa-heart"></i> <%= like_count %>
+                <% end %>
+              <% elsif current_user && @tweet.likes.exists?(user_id: current_user.id) %>
+                <%= button_to unlike_web_tweet_path(tweet), method: :delete, class: "btn btn-danger" do %>
+                  <i class="fa-solid fa-heart"></i>
+                <% end %>
+              <% end %>
+              <%= link_to web_tweet_path(tweet), class: "btn btn-light mx-4" do %>
+                <p class="card-text"><i class="fa-regular fa-comment"></i> <%= reply_count %></p>
+              <% end %>
+              <%= button_to retweet_web_tweet_path(tweet), method: :post, class: "btn btn-light" do %>
+                <i class="fa-solid fa-retweet"></i> <%= retweet_count %>
+              <% end %>
+            </div>
+            <p class="mt-3">
+              <%= link_to "Show this tweet", web_tweet_path(tweet) %>
+            </p>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
