@@ -1,33 +1,78 @@
 Rails.application.routes.draw do
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
+  devise_for :users, controllers: {
+    registrations: 'users/registrations'
+  }
 
-  # Defines the root path route ("/")
-  # root "articles#index"
+  root 'tweets#random'
 
-  # CREATE Tweets
-  resources :tweets, only: [:new, :create]
-   # UPDATE Tweets
-  resources :tweets, only: [:edit, :update]
-
-  resources :tweets do
-    member do
-      post 'like', to: 'tweets#like'
-      delete 'unlike', to: 'tweets#unlike'
-      post 'retweet', to: 'tweets#retweet'
-      post 'quote', to: 'tweets#quote'
-      get 'reply', to: 'tweets#reply'
-      post 'bookmark', to: 'tweets#bookmark'
-      get 'stats', to: 'tweets#stats'
+  namespace :web do
+    resources :tweets
+    resources :tweets do
+      member do
+        post 'retweet', to: 'tweets#retweet'
+        post 'quote', to: 'tweets#quote'
+        post 'like', to: 'tweets#like'
+        delete 'unlike', to: 'tweets#unlike'
+        post 'reply', to: 'tweets#reply'
+        get 'stats', to: 'tweets#stats'
+      end
+      get 'load_more', on: :collection
     end
   end
 
-  # resources :users do
-  #   member do 
-  #     get 'tweets', to: 'user#show'
-  #   end
-  # end
+  namespace :web do
+    resources :users, param: :username, only: [:show, :edit, :update]
+    resources :users do
+      member do
+        post 'follow', to: 'users#follow'
+        delete 'unfollow', to: 'users#unfollow'
+      end
+    end
+  end
 
+  
+  namespace :api do 
+    resources :tweets do
+      resources :tweets
+      member do
+        post 'like', to: 'tweets#like'
+        delete 'unlike', to: 'tweets#unlike'
+        post 'retweet', to: 'tweets#retweet'
+        post 'quote', to: 'tweets#quote'
+        post 'reply', to: 'tweets#reply'
+        post 'bookmark', to: 'tweets#bookmark'
+      end
+    end
+  end
+
+  namespace :api do 
+    resources :users do
+      resources :users
+      member do
+      end
+    end
+  end
+
+  namespace :api do
+    resources :authentication do
+      member do
+       post 'log_in', to: 'auth#create'
+      end 
+    end  
+    resources :registration do
+      member do
+       post 'create', to: 'registration#create'
+      end 
+    end 
+    resources :sessions do
+      member do
+       post 'login', to: 'sessions#create'
+       delete 'logout', to: 'sessions#destroy'
+      end 
+    end 
+  end
 
 end
+
 
 

@@ -1,4 +1,10 @@
 class User < ApplicationRecord
+
+
+  # Include default devise modules. Others available are:
+  # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
+  devise :database_authenticatable, :registerable,
+         :recoverable, :rememberable, :validatable
     has_many :followees, foreign_key: :follower_id, class_name: 'Follow'
     has_many :followers,foreign_key: :followee_id, class_name: 'Follow'
     has_many :tweets
@@ -10,12 +16,6 @@ class User < ApplicationRecord
 
     validates :email, :username, presence: true, 
         uniqueness: true
-        
-    validates :password,
-        presence: true, 
-        length: {minimum: 12}, 
-        format: { with: /(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*()_+])/ }
-        
 
     scope :followers_count_by_user, -> (user_id) { where(id: user_id).joins(:followers).count }
 

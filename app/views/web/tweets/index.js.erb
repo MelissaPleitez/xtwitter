@@ -1,0 +1,6 @@
+$('#tweets-container').append('<%= j render  @tweetsPaginate %>');
+<% if  @tweetsPaginate.next_page %>
+  $('#load-more-link').attr('href', '<%= tweets_path(page:  @tweetsPaginate.next_page) %>');
+<% else %>
+  $('#load-more').hide();
+<% end %>

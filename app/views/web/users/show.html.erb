@@ -1,0 +1,95 @@
+<%= content_for :user_profile do %>
+  <div class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container">
+      <p class="navbar-brand">
+         <%= link_to(web_user_path(current_user.username), class: "text-decoration-none text-dark") do %>
+          <i class="fa-regular fa-user me-1"></i> Profile
+          <% end %>
+      </p>
+      <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <% if !user_signed_in? %>
+              <%= link_to "Login", new_user_session_path, class: "btn btn-primary" %>
+            <% else %>
+              <%= button_to "Logout", destroy_user_session_path, method: :delete, class: "btn btn-primary" %>
+            <% end %>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+<% end %>
+
+<div class="container mt-5">
+  <!-- Cabecera del perfil -->
+  <div class="jumbotron">
+    <div class="d-flex justify-content-between align-items-center">
+      <h1><%= "@" + @user.username %></h1>
+      <% if current_user == @user %>
+        <%= button_to "Editar Perfil", edit_web_user_path(@user.username), method: :get, class: "btn btn-outline-primary" %>
+      <% else %>
+        <% if current_user.followees.exists?(followee_id: @user.id) %>
+          <%= button_to "Unfollow", unfollow_web_user_path(@user), method: :delete, class: "btn btn-outline-danger" %>
+        <% else %>
+          <%= button_to "Follow", follow_web_user_path(@user), method: :post, class: "btn btn-outline-primary" %>
+        <% end %>
+      <% end %>
+    </div>
+
+    <p>Join on <%= @user.created_at.strftime(" %B %Y") %></p>
+    <p>Profile Description</p>
+    <div class="d-flex">
+      <p>Followers: <%= @followers_count %></p>
+      <p class="mx-3">Following: <%= @following_count %></p>
+    </div>
+  </div>
+
+
+  <ul class="nav nav-tabs" id="myTabs" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active" id="tweets-tab" data-toggle="tab" href="#tweets" role="tab" aria-controls="tweets" aria-selected="true">Tweets</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" id="likes-tab" data-toggle="tab" href="#likes" role="tab" aria-controls="likes" aria-selected="false">Likes</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" id="replies-tab" data-toggle="tab" href="#replies" role="tab" aria-controls="replies" aria-selected="false">Replies</a>
+    </li>
+  </ul>
+
+
+  <div class="tab-content mt-3" id="myTabsContent">
+    <!-- Pestaña de Tweets -->
+    <div class="tab-pane fade show active" id="tweets" role="tabpanel" aria-labelledby="tweets-tab">
+      <% @tweets.each do |tweet| %>
+        <div class="list-group">
+          <a href="#" class="list-group-item list-group-item-action">
+            <div class="d-flex w-100 justify-content-between">
+              <h5 class="mb-1"><%= tweet.user.username %></h5>
+              <small><%= tweet.created_at.strftime("%d %b %y") %></small>
+            </div>
+            <p class="mb-1"><%= tweet.body %></p>
+          </a>
+        </div>
+      <% end %>
+    </div>
+
+
+    <div class="tab-pane fade" id="likes" role="tabpanel" aria-labelledby="likes-tab">
+ 
+    </div>
+
+
+    <div class="tab-pane fade" id="replies" role="tabpanel" aria-labelledby="replies-tab">
+
+    </div>
+  </div>
+</div>
+
+<div class="text-center mt-3">
+  <%= link_to "Back to Feed", web_tweets_path, class: "btn btn-primary mr-2" %>
+</div>
+
+
+

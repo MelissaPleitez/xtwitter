@@ -1,0 +1,86 @@
+<%= content_for :user_profile do %>
+  <div class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container">
+      <p class="navbar-brand">
+         <%= link_to(web_user_path(current_user.username), class: "text-decoration-none text-dark") do %>
+          <i class="fa-regular fa-user me-1"></i> Profile
+          <% end %>
+      </p>
+      <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <% if !user_signed_in? %>
+              <%= link_to "Login", new_user_session_path, class: "btn btn-primary" %>
+            <% else %>
+              <%= button_to "Logout", destroy_user_session_path, method: :delete, class: "btn btn-primary" %>
+            <% end %>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+<% end %>
+
+<% like_count = @tweet.likes.count %>
+<% reply_count = @tweet.replies.count %>
+<% retweet_count = @tweet.retweets.count %>
+
+<div class="container mt-5">
+  <div class="card">
+    <div class="card-body">
+      <div class="media">
+        <p class="mr-3 rounded-circle" style="width: 64px;"><%= @tweet.user.name %></p>
+        <div class="media-body">
+          <h5 class="mt-0">@<%= @tweet.user.username %></h5>
+          <div class="d-flex justify-content-between align-items-center"> <!-- Added a flex container for the username and Follow button -->
+            <p><%= @tweet.body %></p>
+            <% unless current_user.username == @tweet.user.username %>
+              <div>
+                <% if current_user.followees.exists?(followee_id: @tweet.user.id) %>
+                  <%= button_to "Unfollow", unfollow_web_user_path(@tweet.user), method: :delete, class: "btn btn-outline-danger" %>
+                <% else %>
+                  <%= button_to "Follow", follow_web_user_path(@tweet.user), method: :post, class: "btn btn-outline-primary" %>
+                <% end %>
+              </div>
+            <% end %>
+          </div>
+          <p class="text-muted"><%= @tweet.created_at.strftime("%d %b %y") %></p>
+        </div>
+      </div>
+
+      <div class="d-flex justify-content-around align-items-center mt-3">
+        <%= button_to retweet_web_tweet_path(@tweet), method: :post, class: "btn btn-light" do %>
+          <i class="fa-solid fa-retweet"></i>
+        <% end %>
+
+        <% if current_user && !@tweet.likes.exists?(user_id: current_user.id) %>
+          <%= button_to like_web_tweet_path(@tweet), method: :post, class: "btn btn-light" do %>
+            <i class="fa-regular fa-heart"></i> Like
+          <% end %>
+        <% elsif current_user && @tweet.likes.exists?(user_id: current_user.id) %>
+          <%= button_to unlike_web_tweet_path(@tweet), method: :delete, class: "btn btn-danger" do %>
+            <i class="fa-solid fa-heart"></i>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <div class="card mt-3">
+    <div class="card-body">
+      <%= form_with(model: @reply_tweet, url: reply_web_tweet_path(@tweet), method: :post) do |form| %>
+        <div class="form-group">
+          <%= form.text_area :body, placeholder: 'Reply', class: 'form-control', rows: 2 %>
+        </div>
+        <div class="text-right">
+          <%= form.submit "Reply", class: 'btn btn-primary mt-2' %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<div class="text-center mt-3">
+  <%= link_to "Edit this tweet", edit_web_tweet_path(@tweet), class: "btn btn-primary mr-2" %>
+  <%= link_to "Back to the feed", web_tweets_path, class: "btn btn-secondary" %>
+</div>

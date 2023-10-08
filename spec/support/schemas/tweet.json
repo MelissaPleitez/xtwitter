@@ -1,14 +1,40 @@
 {
-  "type":"object",
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": ["array", "object"],
   "properties": {
-    "body": { "type": "string"},
-    "user_id": { "type": "integer"},
-    "retweet_id": { "type": "integer"},
-    "quote_id": { "type": "integer"},
-    "parent_tweet_id": { "type": "integer"},
-    "created_at": { "type": "string"},
-    "updated_at": { "type": "string"}
+    "id": {
+      "type": "integer"
+    },
+    "body": {
+      "type": "string"
+    },
+    "user_id": {
+      "type": "integer"
+    },
+    "retweet_id": {
+      "type": ["null", "integer"]
+    },
+    "quote_id": {
+      "type": ["null", "integer"]
+    },
+    "parent_tweet_id": {
+      "type": ["null", "integer"]
+    },
+    "created_at": {
+      "type": "string"
+    },
+    "updated_at": {
+      "type": "string"
+    }
   },
-  
-  "required": ["user_id", "body"]
+  "required": [
+    "id",
+    "body",
+    "user_id",
+    "retweet_id",
+    "quote_id",
+    "parent_tweet_id",
+    "created_at",
+    "updated_at"
+  ]
 }

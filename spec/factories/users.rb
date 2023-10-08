@@ -1,8 +1,8 @@
 FactoryBot.define do
   factory :user do
-    name { Faker::Internet.name }
+    name { Faker::Name.name } # Agregar un valor aleatorio para el nombre
     username { Faker::Internet.username }
     email { Faker::Internet.email }
-    password { Faker::Internet.password( min_length: 12, max_length: 13, mix_case: true, special_characters: true) }
+    password { "Password@123" }
   end
 end
