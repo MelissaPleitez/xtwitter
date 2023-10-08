@@ -3,8 +3,9 @@ class Api::SessionsController < ApiController
   before_action :set_default_format
 
   def create
-      user  = User.find_by(email: user_params[:email])
-    if user.valid_password?(user_params[:password])
+    user = User.find_by(email: user_params[:email])
+
+    if user && user.valid_password?(user_params[:password])
       token = Api::JsonWebToken.encode(id: user.id)
       render json: { token: token }
     else
@@ -13,7 +14,7 @@ class Api::SessionsController < ApiController
   end
 
   def destroy
-    render json: {message: "Session closed" }
+    render json: { message: "Session closed" }
   end 
 
   private

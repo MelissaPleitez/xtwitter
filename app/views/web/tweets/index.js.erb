@@ -1,0 +1,25 @@
+<% if @tweets.next_page %>
+  var nextPage = <%= @tweets.next_page %>;
+  var userId = <%= current_user.id %>;
+
+  var loadMoreButton = document.getElementById("load-more-button");
+  loadMoreButton.addEventListener("click", function() {
+    loadMoreTweets(nextPage, userId);
+  });
+<% else %>
+  // Si no hay más páginas, oculta el botón "Load More" o muestra un mensaje
+  var loadMoreButton = document.getElementById("load-more-button");
+  loadMoreButton.style.display = "none"; // O ajusta el mensaje aquí
+<% end %>
+
+function loadMoreTweets(page, userId) {
+  $.ajax({
+    url: "/web/tweets",
+    type: "GET",
+    data: { page: page, user_id: userId },
+    dataType: "script",
+    success: function() {
+      // El servidor responderá con más tweets y JavaScript para cargarlos
+    }
+  });
+}

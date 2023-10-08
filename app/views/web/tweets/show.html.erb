@@ -2,8 +2,9 @@
   <div class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container">
       <p class="navbar-brand">
-       <i class="fa-regular fa-user"></i>
-        <%= link_to "Profile", web_user_path(current_user.username) %>
+         <%= link_to(web_user_path(current_user.username), class: "text-decoration-none text-dark") do %>
+          <i class="fa-regular fa-user me-1"></i> Profile
+          <% end %>
       </p>
       <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
         <ul class="navbar-nav">
@@ -46,12 +47,11 @@
           <% end %>
         <% end %>
 
-        <!-- Botón de Retweet -->
         <%= button_to retweet_web_tweet_path(@tweet), method: :post, class: "btn btn-light" do %>
           <i class="fa-solid fa-retweet"></i>
         <% end %>
 
-        <!-- Botón de Like/Unlike -->
+
         <% if current_user && !@tweet.likes.exists?(user_id: current_user.id) %>
           <%= button_to like_web_tweet_path(@tweet), method: :post, class: "btn btn-light" do %>
             <i class="fa-regular fa-heart"></i> Like
@@ -65,7 +65,7 @@
     </div>
   </div>
 
-  <!-- Formulario de respuesta (reply form) -->
+
   <div class="card mt-3">
     <div class="card-body">
       <%= form_with(model: @reply_tweet, url: reply_web_tweet_path(@tweet), method: :post) do |form| %>
