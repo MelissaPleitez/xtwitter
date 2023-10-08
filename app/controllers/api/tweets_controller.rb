@@ -1,5 +1,4 @@
 class Api::TweetsController < ApiController
-    include TweetsConcerns
     before_action :set_tweet, only: %i[show edit update destroy]
     before_action :set_default_format
     before_action :authenticate_user!

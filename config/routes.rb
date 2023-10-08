@@ -16,6 +16,7 @@ Rails.application.routes.draw do
         post 'reply', to: 'tweets#reply'
         get 'stats', to: 'tweets#stats'
       end
+      get 'load_more', on: :collection
     end
   end
 

@@ -27,12 +27,12 @@
     <div class="d-flex justify-content-between align-items-center">
       <h1><%= "@" + @user.username %></h1>
       <% if current_user == @user %>
-        <%= button_to "Editar Perfil", edit_web_user_path(@user.username), method: :get, class: "btn btn-primary" %>
+        <%= button_to "Editar Perfil", edit_web_user_path(@user.username), method: :get, class: "btn btn-outline-primary" %>
       <% else %>
         <% if current_user.followees.exists?(followee_id: @user.id) %>
-          <%= button_to "Unfollow", unfollow_web_user_path(@user), method: :delete, class: "btn btn-danger" %>
+          <%= button_to "Unfollow", unfollow_web_user_path(@user), method: :delete, class: "btn btn-outline-danger" %>
         <% else %>
-          <%= button_to "Follow", follow_web_user_path(@user), method: :post, class: "btn btn-primary" %>
+          <%= button_to "Follow", follow_web_user_path(@user), method: :post, class: "btn btn-outline-primary" %>
         <% end %>
       <% end %>
     </div>

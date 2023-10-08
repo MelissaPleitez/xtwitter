@@ -32,25 +32,26 @@
         <p class="mr-3 rounded-circle" style="width: 64px;"><%= @tweet.user.name %></p>
         <div class="media-body">
           <h5 class="mt-0">@<%= @tweet.user.username %></h5>
-          <p><%= @tweet.body %></p>
+          <div class="d-flex justify-content-between align-items-center"> <!-- Added a flex container for the username and Follow button -->
+            <p><%= @tweet.body %></p>
+            <% unless current_user.username == @tweet.user.username %>
+              <div>
+                <% if current_user.followees.exists?(followee_id: @tweet.user.id) %>
+                  <%= button_to "Unfollow", unfollow_web_user_path(@tweet.user), method: :delete, class: "btn btn-outline-danger" %>
+                <% else %>
+                  <%= button_to "Follow", follow_web_user_path(@tweet.user), method: :post, class: "btn btn-outline-primary" %>
+                <% end %>
+              </div>
+            <% end %>
+          </div>
           <p class="text-muted"><%= @tweet.created_at.strftime("%d %b %y") %></p>
         </div>
       </div>
 
       <div class="d-flex justify-content-around align-items-center mt-3">
-        <!-- Botón de Follow/Unfollow -->
-        <% unless current_user.username == @tweet.user.username %>
-          <% if current_user.followees.exists?(followee_id: @tweet.user.id) %>
-            <%= button_to "Unfollow", unfollow_web_user_path(@tweet.user), method: :delete, class: "btn btn-danger" %>
-          <% else %>
-            <%= button_to "Follow", follow_web_user_path(@tweet.user), method: :post, class: "btn btn-primary" %>
-          <% end %>
-        <% end %>
-
         <%= button_to retweet_web_tweet_path(@tweet), method: :post, class: "btn btn-light" do %>
           <i class="fa-solid fa-retweet"></i>
         <% end %>
-
 
         <% if current_user && !@tweet.likes.exists?(user_id: current_user.id) %>
           <%= button_to like_web_tweet_path(@tweet), method: :post, class: "btn btn-light" do %>
@@ -64,7 +65,6 @@
       </div>
     </div>
   </div>
-
 
   <div class="card mt-3">
     <div class="card-body">

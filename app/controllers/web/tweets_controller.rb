@@ -1,5 +1,4 @@
 class Web::TweetsController < ApplicationController
-  include TweetsConcerns
   before_action :authenticate_user!
   before_action :set_tweet, only: %i[show edit update]
 
@@ -8,11 +7,19 @@ class Web::TweetsController < ApplicationController
     @tweets = @user.tweets.includes(:replies, :retweets).order(created_at: :desc)
     followed_user_ids = current_user.followees.pluck(:followee_id)
 
-    @tweets += Tweet.where(user_id: followed_user_ids).or(Tweet.where(retweet_id: followed_user_ids))
-                  .or(Tweet.where(quote_id: followed_user_ids))
-                  .order(created_at: :desc)
+    @tweets += Tweet.where(user_id: followed_user_ids)
+                   .or(Tweet.where(retweet_id: followed_user_ids))
+                   .or(Tweet.where(quote_id: followed_user_ids))
+                   .order(created_at: :desc)
 
     @tweet = Tweet.new(user: current_user)
+  end
+
+  def load_more
+    @tweets = Tweet.page(params[:page]).per(10)
+    respond_to do |format|
+      format.js
+    end
   end
 
   def show
@@ -78,7 +85,7 @@ class Web::TweetsController < ApplicationController
     @quote_tweet = Tweet.new(
       body: params[:quote_body],
       user: current_user,
-      quote_id: @original_tweet.id # 
+      quote_id: @original_tweet.id 
     )
 
     respond_to do |format|
@@ -126,7 +133,7 @@ class Web::TweetsController < ApplicationController
 
     respond_to do |format|
       if @reply_tweet.save
-        format.html { redirect_to web_tweet_path(@tweet), notice: "The reply was succesful" }
+        format.html { redirect_to web_tweet_path(@tweet), notice: "The reply was successful." }
       else
         format.html { render :show, status: :unprocessable_entity }
       end
