@@ -1,1 +1,1 @@
-json.partial! "api/tweets/like", tweet: @tweet
+json.message 'Liked the tweet!'

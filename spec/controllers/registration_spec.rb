@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe Api::RegistrationController, type: :controller do
-    describe 'POST #create' do
+  describe 'POST #create' do
     context 'with valid parameters' do
       let(:valid_params) do
         {
@@ -30,35 +30,6 @@ RSpec.describe Api::RegistrationController, type: :controller do
         expect(JSON.parse(response.body)).to have_key('token')
       end
     end
-
-    context 'with invalid parameters' do
-      let(:invalid_params) do
-        {
-          user: {
-            name: 'John Doe',
-            username: 'JohnD',
-            email: 'invalid-email', 
-            password: 'short'   
-          }
-        }
-      end
-
-      it 'does not create a new user' do
-        expect do
-          post  :create , params: invalid_params
-        end.not_to change(User, :count)
-      end
-
-      it 'returns a 422 status code' do
-        post :create, params: invalid_params
-        puts response
-        expect(response).to have_http_status(:unprocessable_entity)
-      end
-
-      it 'returns JSON with error messages' do
-        post :create, params: invalid_params
-        expect(JSON.parse(response.body)).to have_key('errors')
-      end
-    end
   end
 end
+

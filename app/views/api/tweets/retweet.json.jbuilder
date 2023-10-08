@@ -1,2 +1,1 @@
-json.message "Retweet successfully"
-json.partial! "api/tweets/retweet", tweet: @tweet
+json.extract! retweet, :id, :body, :created_at, :updated_at

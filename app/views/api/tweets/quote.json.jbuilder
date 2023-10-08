@@ -1,2 +1,1 @@
-json.message "Retweet successfully"
-json.partial! "api/tweets/quote", tweet: @tweet
+json.message "Quote successfully"

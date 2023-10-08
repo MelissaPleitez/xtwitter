@@ -1,2 +1,1 @@
-json.message "Reply successfully"
-json.partial! "api/tweets/bookmark", tweet: @tweet
+json.message "Bookmark successfully"

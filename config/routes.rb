@@ -30,13 +30,46 @@ Rails.application.routes.draw do
   end
 
   
-  # namespace :api do 
-  #   resources :tweets do
-  #     resources :tweets
-  #     member do
-  #     end
-  #   end
-  # end
+  namespace :api do 
+    resources :tweets do
+      resources :tweets
+      member do
+        post 'like', to: 'tweets#like'
+        delete 'unlike', to: 'tweets#unlike'
+        post 'retweet', to: 'tweets#retweet'
+        post 'quote', to: 'tweets#quote'
+        post 'reply', to: 'tweets#reply'
+        post 'bookmark', to: 'tweets#bookmark'
+      end
+    end
+  end
+
+  namespace :api do 
+    resources :users do
+      resources :users
+      member do
+      end
+    end
+  end
+
+  namespace :api do
+    resources :authentication do
+      member do
+       post 'log_in', to: 'auth#create'
+      end 
+    end  
+    resources :registration do
+      member do
+       post 'create', to: 'registration#create'
+      end 
+    end 
+    resources :sessions do
+      member do
+       post 'login', to: 'sessions#create'
+       delete 'logout', to: 'sessions#destroy'
+      end 
+    end 
+  end
 
 end
 
